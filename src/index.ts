@@ -4,16 +4,13 @@ console.log('hello world')
 // data Tiger = EmployeeId Name
 // [Tiger] -> [Tigers]
 
-import { Newtype, prism, iso } from 'newtype-ts'
+import { pipe } from 'fp-ts/function'
+import * as I from 'fp-ts/Identity'
+import * as N from 'fp-ts/number'
 import * as O from 'fp-ts/Option'
 import * as D from 'fp-ts/Ord'
-import { pipe } from 'fp-ts/function'
-import * as B from 'fp-ts/boolean'
-import * as N from 'fp-ts/number'
-import * as TP from 'ts-pattern'
-import * as A from 'fp-ts/Array'
-import * as I from 'fp-ts/Identity'
-import * as MO from 'monocle-ts'
+import * as RA from 'fp-ts/ReadonlyArray'
+import { iso, Newtype, prism } from 'newtype-ts'
 import { shuffle } from 'radash'
 
 const isNonEmptyString: (str: string) => boolean = (str) => str !== '' && str !== null && str !== undefined
@@ -58,11 +55,11 @@ console.log(JSON.stringify(tigerOf(employeeIdOf(118520))(nameOf(''))))
 // Functions
 const lucyDraw: (tigers: ReadonlyArray<Tiger>) => ReadonlyArray<Tiger> = (tigers) => shuffle(tigers)
 const sortByEmployeeId: (tigers: ReadonlyArray<Tiger>) => ReadonlyArray<Tiger> = (tigers) =>
-  A.sortBy([byEmployeeId])(tigers as Array<Tiger>)
+  RA.sortBy([byEmployeeId])(tigers)
 const presentIndexWith: (tigers: ReadonlyArray<Tiger>) => ReadonlyArray<[number, Name]> = (t) =>
   pipe(
-    t as Array<Tiger>,
-    A.traverseWithIndex(I.Applicative)((i, t) => [i + 1, t.name])
+    t,
+    RA.traverseWithIndex(I.Applicative)((i, t) => [i + 1, t.name])
   )
 
 const Richard = tigerOf(employeeIdOf(118529))(nameOf('Richard'))
